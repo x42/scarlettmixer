@@ -496,7 +496,8 @@ att_out_monitor(0, 0)
 att_out_phones(0, 0)
 
 
-# mixer-matrix example
+
+### mixer example ###
 
 # disconnect defaults:
 # if ANALG1 is already connected to chn0, it can not be connected to chn1
@@ -504,23 +505,31 @@ att_out_phones(0, 0)
 mixer_set_source(sigsrc.OFF, 0)
 mixer_set_source(sigsrc.OFF, 1)
 
-# re-assign in2 -> ch0, in1 -> ch1
+# zero gains
+mixer_set_gain(0, mixmat.M1, -128);
+mixer_set_gain(0, mixmat.M2, -128);
+mixer_set_gain(1, mixmat.M1, -128);
+mixer_set_gain(1, mixmat.M2, -128);
+
+#instead of the above,
+#we could simply disconnect all inputs and zero all faders..
+zero_settings()
+
+# re-assign in2 -> matrix-ch0, in1 -> matrix-ch1
 mixer_set_source(sigsrc.ANALG2, 0)
 mixer_set_source(sigsrc.ANALG1, 1)
 
-# ch0 -> M1 gain -0dB
-mixer_set_gain(0, mixmat.M1, 0);
-# ch1 -> M2 gain -6dB
+# matrix ch0 -> bus M1  w/ gain +1dB
+mixer_set_gain(0, mixmat.M1, 1);
+# matrix ch1 -> bus M2  w/ gain -6dB
 mixer_set_gain(1, mixmat.M2, -6);
-
-mixer_set_gain(0, mixmat.M2, -122);
-mixer_set_gain(1, mixmat.M1, -122);
 
 bus_set_source(route.PHONES_LEFT,  mixbus.M1)
 bus_set_source(route.PHONES_RIGHT, mixbus.M2)
 
-#cfg_save_settings_to_hardware()
 
+#cfg_save_settings_to_hardware()
+#sys.exit(0)
 
 # print peaks
 for i in range(10000):
@@ -531,7 +540,7 @@ for i in range(10000):
   for i in range(6):
       print "%.1f" % pk['daw'][i],
   print '|',
-  for i in range(8):
+  for i in range(6):
       print "%.1f" % pk['mixer'][i],
   print '\r',
 
