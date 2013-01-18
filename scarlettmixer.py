@@ -33,6 +33,8 @@ device = usb.core.find(idVendor= 0x1235, idProduct=0x8004)
 if device is None:
   raise ValueError('Device not found')
 
+#device.set_configuration()
+
 #### send USB URB ctrl commands ###############################################
 def ctrl_send(wValue, wIndex, data):
   try:
@@ -148,6 +150,11 @@ def ctrl_req(cmd, wValue, wIndex, data):
 #  - select impedance of input1,2: sw_impedance()
 #  - store current settings to hardware: cfg_save_settings_to_hardware()
 #
+# MISC:
+# - set samplerate
+#   ctrl_send(0x0100, 0x2900, 48000)
+#
+
 
 #### ENUMS ####################################################################
 
