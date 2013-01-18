@@ -153,24 +153,24 @@ mute = enum(UNMUTE = [0x00, 0x00], MUTE = [0x01, 0x00])
 
 # signal sources that can be connected to Matrix-Mixer Inputs
 sigsrc = enum(
-    OFF     = [0xff, 0x00],
+    OFF     = 0xff,
     # DAW -- PCM signal sent by the computer
-    DAW1    = [0x00, 0x00], DAW2    = [0x00, 0x01],
-    DAW3    = [0x00, 0x02], DAW4    = [0x00, 0x03],
-    DAW5    = [0x00, 0x04], DAW6    = [0x00, 0x05],
+    DAW1    = 0x00, DAW2    = 0x01,
+    DAW3    = 0x02, DAW4    = 0x03,
+    DAW5    = 0x04, DAW6    = 0x05,
 
     # Analog inputs
-    ANALG1  = [0x00, 0x06], ANALG2  = [0x00, 0x07],
-    ANALG3  = [0x00, 0x08], ANALG4  = [0x00, 0x09],
-    ANALG5  = [0x00, 0x0a], ANALG6  = [0x00, 0x0b],
-    ANALG7  = [0x00, 0x0c], ANALG8  = [0x00, 0x0d],
+    ANALG1  = 0x06, ANALG2  = 0x07,
+    ANALG3  = 0x08, ANALG4  = 0x09,
+    ANALG5  = 0x0a, ANALG6  = 0x0b,
+    ANALG7  = 0x0c, ANALG8  = 0x0d,
 
     # Digital inputs
-    SPDIF1  = [0x00, 0x0e], SPDIF2  = [0x00, 0x0d],
-    ADAT1   = [0x00, 0x10], ADAT2   = [0x00, 0x11],
-    ADAT3   = [0x00, 0x12], ADAT4   = [0x00, 0x13],
-    ADAT5   = [0x00, 0x13], ADAT6   = [0x00, 0x15],
-    ADAT7   = [0x00, 0x16], ADAT8   = [0x00, 0x17]
+    SPDIF1  = 0x0e, SPDIF2  = 0x0d,
+    ADAT1   = 0x10, ADAT2   = 0x11,
+    ADAT3   = 0x12, ADAT4   = 0x13,
+    ADAT5   = 0x13, ADAT6   = 0x15,
+    ADAT7   = 0x16, ADAT8   = 0x17
     )
 
 # matrix mixer outputs
@@ -183,29 +183,29 @@ mixmat = enum(
 # signal sources that can be used as input to the router
 # Note: this is concatenation of  (sigsrc + mixmat)
 mixbus = enum(
-    OFF     = [0xff, 0x00],
+    OFF     = 0xff,
     # Matrix Mixer Outputs
-    M1      = [0x00, 0x18], M2      = [0x00, 0x19],
-    M3      = [0x00, 0x1a], M4      = [0x00, 0x1b],
-    M5      = [0x00, 0x1c], M6      = [0x00, 0x1d],
+    M1      = 0x18, M2      = 0x19,
+    M3      = 0x1a, M4      = 0x1b,
+    M5      = 0x1c, M6      = 0x1d,
 
     # DAW -- PCM signal sent by the computer
-    DAW1    = [0x00, 0x00], DAW2    = [0x00, 0x01],
-    DAW3    = [0x00, 0x02], DAW4    = [0x00, 0x03],
-    DAW5    = [0x00, 0x04], DAW6    = [0x00, 0x05],
+    DAW1    = 0x00, DAW2    = 0x01,
+    DAW3    = 0x02, DAW4    = 0x03,
+    DAW5    = 0x04, DAW6    = 0x05,
 
     # Analog inputs
-    ANALG1  = [0x00, 0x06], ANALG2  = [0x00, 0x07],
-    ANALG3  = [0x00, 0x08], ANALG4  = [0x00, 0x09],
-    ANALG5  = [0x00, 0x0a], ANALG6  = [0x00, 0x0b],
-    ANALG7  = [0x00, 0x0c], ANALG8  = [0x00, 0x0d],
+    ANALG1  = 0x06, ANALG2  = 0x07,
+    ANALG3  = 0x08, ANALG4  = 0x09,
+    ANALG5  = 0x0a, ANALG6  = 0x0b,
+    ANALG7  = 0x0c, ANALG8  = 0x0d,
 
     # Digital inputs
-    SPDIF1  = [0x00, 0x0e], SPDIF2  = [0x00, 0x0d],
-    ADAT1   = [0x00, 0x10], ADAT2   = [0x00, 0x11],
-    ADAT3   = [0x00, 0x12], ADAT4   = [0x00, 0x13],
-    ADAT5   = [0x00, 0x13], ADAT6   = [0x00, 0x15],
-    ADAT7   = [0x00, 0x16], ADAT8   = [0x00, 0x17]
+    SPDIF1  = 0x0e, SPDIF2  = 0x0d,
+    ADAT1   = 0x10, ADAT2   = 0x11,
+    ADAT3   = 0x12, ADAT4   = 0x13,
+    ADAT5   = 0x13, ADAT6   = 0x15,
+    ADAT7   = 0x16, ADAT8   = 0x17
     )
 
 #router output names
@@ -319,7 +319,7 @@ def att_out_phones(left, right):
 def mixer_set_source(src, mixin):
   if (mixin < 0 or mixin > 0x11):
     return
-  ctrl_send(0x0600 + mixin, 0x3200, src)
+  ctrl_send(0x0600 + mixin, 0x3200, [src, 0x00])
 
 ## set mixer-matrix gain
 # @param chn input channel 0..17  -- corresponds to "mixin" of \ref mixer_set_source
@@ -339,11 +339,11 @@ def mixer_set_gain(chn, bus, gain):
 ## connect output of mixer-matrix to the input of route.
 # Note: only one mixer-bus can be connected to a bus at a given time.
 # @param route enum route -- destination route
-# @param mix enum mixbus (2 bytes) -- mixer-matrix output or 'off
+# @param mix enum mixbus -- mixer-matrix output or 'off
 def bus_set_source(route, mixout):
   if (route < 0 or route > 5):
     return
-  ctrl_send(route, 0x3300, mixout)
+  ctrl_send(route, 0x3300, [mixout, 0x00])
 
 
 ###############################################################################
