@@ -35,7 +35,7 @@ if device is None:
 
 #device.set_configuration()
 
-#### send USB URB ctrl commands ###############################################
+#### USB URB ctrl #############################################################
 def ctrl_send(wValue, wIndex, data):
   try:
     assert device.ctrl_transfer(0x21, 0x01, wValue, wIndex, data) == len(data)
@@ -155,7 +155,7 @@ def ctrl_req(cmd, wValue, wIndex, data):
 # - set samplerate
 #   ctrl_send(0x0100, 0x2900, [0x80, 0xbb, 0x00, 0x00]) # 48000 = 0xbb80
 # - save settings to hardware
-#  ctrl_cmd(0x03, 0x005a, 0x3c00, [0xa5])
+#   ctrl_cmd(0x03, 0x005a, 0x3c00, [0xa5])
 #
 # USB URB commands overview
 #  wIndex
