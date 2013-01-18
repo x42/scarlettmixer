@@ -36,13 +36,20 @@ if device is None:
 #### send USB URB ctrl commands ###############################################
 def ctrl_send(wValue, wIndex, data):
   try:
-    usbCom = device.ctrl_transfer(0x21, 0x01, wValue, wIndex, data)
+    assert device.ctrl_transfer(0x21, 0x01, wValue, wIndex, data) == len(data)
   except:
     raise ValueError('request failed')
 
 def ctrl_cmd(cmd, wValue, wIndex, data):
   try:
-    usbCom = device.ctrl_transfer(0x21, cmd, wValue, wIndex, data)
+    assert device.ctrl_transfer(0x21, cmd, wValue, wIndex, data) == len(data)
+  except:
+    raise ValueError('request failed')
+
+def ctrl_req(cmd, wValue, wIndex, data):
+  try:
+    rv = device.ctrl_transfer(0xa1, cmd, wValue, wIndex, data)
+    return rv;
   except:
     raise ValueError('request failed')
 
