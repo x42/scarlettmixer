@@ -180,10 +180,10 @@ sigsrc = enum(
     ANALG7  = 0x0c, ANALG8  = 0x0d,
 
     # Digital inputs
-    SPDIF1  = 0x0e, SPDIF2  = 0x0d,
+    SPDIF1  = 0x0e, SPDIF2  = 0x0f,
     ADAT1   = 0x10, ADAT2   = 0x11,
     ADAT3   = 0x12, ADAT4   = 0x13,
-    ADAT5   = 0x13, ADAT6   = 0x15,
+    ADAT5   = 0x14, ADAT6   = 0x15,
     ADAT7   = 0x16, ADAT8   = 0x17
     )
 
@@ -215,10 +215,10 @@ mixbus = enum(
     ANALG7  = 0x0c, ANALG8  = 0x0d,
 
     # Digital inputs
-    SPDIF1  = 0x0e, SPDIF2  = 0x0d,
+    SPDIF1  = 0x0e, SPDIF2  = 0x0f,
     ADAT1   = 0x10, ADAT2   = 0x11,
     ADAT3   = 0x12, ADAT4   = 0x13,
-    ADAT5   = 0x13, ADAT6   = 0x15,
+    ADAT5   = 0x14, ADAT6   = 0x15,
     ADAT7   = 0x16, ADAT8   = 0x17
     )
 
