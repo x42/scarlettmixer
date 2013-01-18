@@ -423,7 +423,7 @@ def factory_reset():
   sw_impedance(0, impedance.LINEIN)
   sw_impedance(1, impedance.LINEIN)
 
-  # ??
+  # ?? hi/lo gain for the 8i6 inputs 3,4 ??
   ctrl_send(0x0803, 0x0100, [0x00, 0x00])
   ctrl_send(0x0804, 0x0100, [0x00, 0x00])
 
