@@ -400,7 +400,7 @@ bus_set_source(route.MONITOR_RIGHT, mixbus.DAW1)
 bus_set_source(route.PHONES_LEFT,   mixbus.DAW1)
 bus_set_source(route.PHONES_RIGHT,  mixbus.DAW1)
 
-bus_set_source(route.SPDIF_LEFT, mixbus.OFF)
+bus_set_source(route.SPDIF_LEFT,  mixbus.OFF)
 bus_set_source(route.SPDIF_RIGHT, mixbus.OFF)
 
 # make sure the outputs are not muted
@@ -414,6 +414,30 @@ sw_mute_bus(sigout.PHONES_RIGHT, mute.UNMUTE)
 att_out_master(0)
 att_out_monitor(0, 0)
 att_out_phones(0, 0)
+
+
+# mixer-matrix example
+
+# disconnect defaults:
+# if ANALG1 is already connected to chn0, it can not be connected to chn1
+# also if chn1 already has a connection it won't be changed
+mixer_set_source(sigsrc.OFF, 0)
+mixer_set_source(sigsrc.OFF, 1)
+
+# re-assign in2 -> ch0, in1 -> ch1
+mixer_set_source(sigsrc.ANALG2, 0)
+mixer_set_source(sigsrc.ANALG1, 1)
+
+# ch0 -> M1 gain -0dB
+mixer_set_gain(0, mixmat.M1, 0);
+# ch1 -> M2 gain -6dB
+mixer_set_gain(1, mixmat.M2, -6);
+
+mixer_set_gain(0, mixmat.M2, -122);
+mixer_set_gain(1, mixmat.M1, -122);
+
+bus_set_source(route.PHONES_LEFT,  mixbus.M1)
+bus_set_source(route.PHONES_RIGHT, mixbus.M2)
 
 #cfg_save_settings_to_hardware()
 
