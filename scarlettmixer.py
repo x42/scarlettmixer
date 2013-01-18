@@ -150,9 +150,23 @@ def ctrl_req(cmd, wValue, wIndex, data):
 #  - select impedance of input1,2: sw_impedance()
 #  - store current settings to hardware: cfg_save_settings_to_hardware()
 #
+#
 # MISC:
 # - set samplerate
-#   ctrl_send(0x0100, 0x2900, 48000)
+#   ctrl_send(0x0100, 0x2900, [0x80, 0xbb, 0x00, 0x00]) # 48000 = 0xbb80
+# - save settings to hardware
+#  ctrl_cmd(0x03, 0x005a, 0x3c00, [0xa5])
+#
+# USB URB commands overview
+#  wIndex
+#  0x0100  Analog Input line/instrument impedance switch, wValue=0x0901 + channel, data=Line/Inst (2bytes)
+#  0x0a00  Master Volume, wValue=0x0200+bus data(2bytes); Bus Mute/Unmute wValue=0x0100+bus, data(2bytes)
+#  0x2800  Clock source, wValue=0x0100, data=int,spdif,adat (1byte)
+#  0x2900  Set Sample-rate, wValue=0x0100 data=samle-rate(4bytes)
+#  0x3200  Assign mixer inputs, wValue=0x0600 + mixer-channel, data=input-to-connect(2bytes)
+#  0x3300  Routing table, wValue=bus, data=input-to-connect(2bytes)
+#  0x3400  ?? (clear mixer -- force assignment) used during factory-reset
+#  0x3c00  Matrix Mixer gains, wValue=mixer-node  data=gain(2bytes)
 #
 
 
