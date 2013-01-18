@@ -361,6 +361,75 @@ def bus_set_source(route, mixout):
     return
   ctrl_send(route, 0x3300, [mixout, 0x00])
 
+###############################################################################
+#### FACTORY RESET ############################################################
+def factory_reset():
+
+  # ?? -- clear assignments, disconnect matrix I/O ??
+  for i in range(18):
+    ctrl_send(0x0000 + i , 0x3400, [0x06 + i, 0x00])
+
+  # set bus outs
+  bus_set_source(0, mixbus.M1)
+  bus_set_source(1, mixbus.M2)
+  bus_set_source(2, mixbus.M1)
+  bus_set_source(3, mixbus.M2)
+  bus_set_source(4, mixbus.OFF)
+  bus_set_source(5, mixbus.OFF)
+
+  ## Mixer config
+
+  #Analog in
+  for i in range(8):
+    mixer_set_source(0x06 + i, i)
+  #ADAT
+  for i in range(6):
+    mixer_set_source(0x10 + i, 8+i)
+  #SPDIF
+  mixer_set_source(0x0e, 0x0e)
+  mixer_set_source(0x0f, 0x0f)
+  #DAW
+  mixer_set_source(0x00, 0x10)
+  mixer_set_source(0x01, 0x11)
+
+  for i in range(18):
+    for o in range(6):
+      g = -200
+      if ((i%2) == o):
+         g = 0
+      mixer_set_gain(i, o, g);
+
+  sw_mute_bus(sigout.MONITOR_LEFT, mute.UNMUTE)
+  sw_mute_bus(sigout.MONITOR_RIGHT, mute.UNMUTE)
+  sw_mute_bus(sigout.PHONES_LEFT, mute.UNMUTE)
+  sw_mute_bus(sigout.PHONES_RIGHT, mute.UNMUTE)
+
+  sw_impedance(0, impedance.LINEIN)
+  sw_impedance(1, impedance.LINEIN)
+
+  # ??
+  ctrl_send(0x0803, 0x0100, [0x00, 0x00])
+  ctrl_send(0x0804, 0x0100, [0x00, 0x00])
+
+def zero_settings():
+  for i in range(18):
+    for o in range(6):
+      mixer_set_gain(i, o, -200);
+
+  for i in range(18):
+    ctrl_send(0x0000 + i , 0x3400, [0x06 + i, 0x00])
+
+  for i in range(6):
+    bus_set_source(i, mixbus.OFF)
+
+  for i in range(18):
+    mixer_set_source(sigsrc.OFF, i);
+
+  sw_mute_bus(sigout.MONITOR_LEFT, mute.UNMUTE)
+  sw_mute_bus(sigout.MONITOR_RIGHT, mute.UNMUTE)
+  sw_mute_bus(sigout.PHONES_LEFT, mute.UNMUTE)
+  sw_mute_bus(sigout.PHONES_RIGHT, mute.UNMUTE)
+
 
 ###############################################################################
 #### PEAK METER ###############################################################
