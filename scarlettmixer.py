@@ -251,12 +251,14 @@ def att_to_hex(value):
   return [(val&0xff), (val>>8)]
 
 ##caluvalet gain for mixer channel faders
-# @param value dB  -infty .. 0 ; effective range -128..0 (default is -6dB)
+# @param value dB  -infty .. 0 ; effective range -128..6 (default is 0dB)
 # @return little endian hex representation
 def gain_to_hex(value):
   if (value <= -128):
     return [0x00, 0x80]
-  if (value >= 0):
+  elif (value > 0 and value <= 6):
+    return [0x00, 0x00 + value]
+  elif (value >= 0):
     return [0x00, 0x00]
   return [0x00, (0xff + value)]
 
@@ -338,14 +340,14 @@ def mixer_set_source(src, mixin):
 ## set mixer-matrix gain
 # @param chn input channel 0..17  -- corresponds to "mixin" of \ref mixer_set_source
 # @param bus output bus 0..5  -- use enum mixmat
-# @param gain -infty..0 dB  (default is -6dB)
+# @param gain -infty..+6 dB  (default is 0dB)
 def mixer_set_gain(chn, bus, gain):
   if (bus < 0 or bus > 5):
     return
   if (chn < 0 or chn > 17):
     return
   mtx = (chn<<4) + (bus&0x07)
-  ctrl_send(mtx, 0x3c00, gain_to_hex(gain))
+  ctrl_send(0x0100 + mtx, 0x3c00, gain_to_hex(gain))
 
 
 #### routing table ############################################################
