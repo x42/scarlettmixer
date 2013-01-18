@@ -354,6 +354,37 @@ def bus_set_source(route, mixout):
 
 
 ###############################################################################
+#### PEAK METER ###############################################################
+
+def val16_to_db(v):
+    if (v == 0):
+      return float('-inf')
+    else:
+      return float(20.0 * math.log(v / 65536.0, 10))
+
+def twobyte_to_db(hi, lo):
+    return val16_to_db(((hi&0xff)<<8) + (lo&0xff))
+
+def query_peak():
+  indb = []
+  mixd = []
+  dawd = []
+  ins = ctrl_req(0x03, 0x0000, 0x3c00, 36);
+  daw = ctrl_req(0x03, 0x0003, 0x3c00, 12);
+  mix = ctrl_req(0x03, 0x0001, 0x3c00, 16);
+
+  for i in range(18):
+    indb.append(twobyte_to_db(ins[2*i+1], ins[2*i]))
+  for i in range(6):
+    dawd.append(twobyte_to_db(daw[2*i+1], daw[2*i]))
+  for i in range(8):
+    mixd.append(twobyte_to_db(mix[2*i+1], mix[2*i]))
+
+  return {'input': indb, 'daw': dawd, 'mixer': mixd}
+
+
+
+###############################################################################
 #### EXAMPLE USAGE ############################################################
 
 sw_impedance(0, impedance.LINEIN)
@@ -383,5 +414,23 @@ sw_mute_bus(sigout.PHONES_RIGHT, mute.UNMUTE)
 att_out_master(0)
 att_out_monitor(0, 0)
 att_out_phones(0, 0)
+
+#cfg_save_settings_to_hardware()
+
+
+# print peaks
+for i in range(10000):
+  pk = query_peak();
+  for i in range(8):
+      print "%.1f" % pk['input'][i],
+  print '|',
+  for i in range(6):
+      print "%.1f" % pk['daw'][i],
+  print '|',
+  for i in range(8):
+      print "%.1f" % pk['mixer'][i],
+  print '\r',
+
+sys.exit(0)
 
 # vim: set ts=2 sw=2 et:
