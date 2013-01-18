@@ -233,7 +233,7 @@ sigout = enum(
 #### helper functions - decibel calc ##########################################
 
 ##calculate attenuation for buses
-# @param value dB  -infty .. 0 ; effective range -128..0
+# @param value dB  -infty .. 0 ; effective range -128..0 (default is 0)
 # @return little endian hex representation
 def att_to_hex(value):
   if (value <= -128):
@@ -244,14 +244,14 @@ def att_to_hex(value):
   return [(val&0xff), (val>>8)]
 
 ##caluvalet gain for mixer channel faders
-# @param value dB  -infty .. +6 ; effective range -122 .. +6
+# @param value dB  -infty .. 0 ; effective range -128..0 (default is -6dB)
 # @return little endian hex representation
 def gain_to_hex(value):
-  if (value > 5):
-    return [0x00, 0x00]
-  if (value <= -122):
+  if (value <= -128):
     return [0x00, 0x80]
-  return [0x00, (0xfa + value)]
+  if (value >= 0):
+    return [0x00, 0x00]
+  return [0x00, (0xff + value)]
 
 
 ###############################################################################
@@ -331,7 +331,7 @@ def mixer_set_source(src, mixin):
 ## set mixer-matrix gain
 # @param chn input channel 0..17  -- corresponds to "mixin" of \ref mixer_set_source
 # @param bus output bus 0..5  -- use enum mixmat
-# @param gain -122 .. +6 db
+# @param gain -infty..0 dB  (default is -6dB)
 def mixer_set_gain(chn, bus, gain):
   if (bus < 0 or bus > 5):
     return
