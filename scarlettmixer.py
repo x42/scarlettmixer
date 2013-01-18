@@ -379,6 +379,9 @@ def bus_set_source(route, mixout):
 
 ###############################################################################
 #### FACTORY RESET ############################################################
+
+## restore device to factory settings
+# NB. there is no single command to do so, MixControl sends values
 def factory_reset():
 
   # ?? -- clear assignments, disconnect matrix I/O ??
@@ -386,15 +389,14 @@ def factory_reset():
     ctrl_send(0x0000 + i , 0x3400, [0x06 + i, 0x00])
 
   # set bus outs
-  bus_set_source(0, mixbus.M1)
-  bus_set_source(1, mixbus.M2)
-  bus_set_source(2, mixbus.M1)
-  bus_set_source(3, mixbus.M2)
-  bus_set_source(4, mixbus.OFF)
-  bus_set_source(5, mixbus.OFF)
+  bus_set_source(route.MONITOR_LEFT , mixbus.M1)
+  bus_set_source(route.MONITOR_RIGHT, mixbus.M2)
+  bus_set_source(route.PHONES_LEFT,   mixbus.M1)
+  bus_set_source(route.PHONES_RIGHT,  mixbus.M2)
+  bus_set_source(royte.SPDIF_LEFT,    mixbus.OFF)
+  bus_set_source(royte.SPDIF_RIGHT,   mixbus.OFF)
 
-  ## Mixer config
-
+  ## Mixer inputs
   #Analog in
   for i in range(8):
     mixer_set_source(0x06 + i, i)
@@ -408,6 +410,7 @@ def factory_reset():
   mixer_set_source(0x00, 0x10)
   mixer_set_source(0x01, 0x11)
 
+  ## Mixer gains
   for i in range(18):
     for o in range(6):
       g = -200
@@ -427,6 +430,11 @@ def factory_reset():
   ctrl_send(0x0803, 0x0100, [0x00, 0x00])
   ctrl_send(0x0804, 0x0100, [0x00, 0x00])
 
+## zero-settings
+# - set all mixer-matrix gains to zero
+# - disconnect all outputs
+# - disconnect all inputs from mixer-matrix
+# - unmute all outputs
 def zero_settings():
   for i in range(18):
     for o in range(6):
