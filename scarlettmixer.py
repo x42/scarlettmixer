@@ -251,16 +251,18 @@ def att_to_hex(value):
   return [(val&0xff), (val>>8)]
 
 ##caluvalet gain for mixer channel faders
-# @param value dB  -infty .. 0 ; effective range -128..6 (default is 0dB)
+# @param value dB  -infty .. +6 ; effective range -128..6 (default is 0dB)
 # @return little endian hex representation
 def gain_to_hex(value):
+  value= int(math.floor(value+.5))
   if (value <= -128):
     return [0x00, 0x80]
-  elif (value > 0 and value <= 6):
-    return [0x00, 0x00 + value]
+  elif (value > 6):
+    return [0x00, 0x06]
   elif (value >= 0):
-    return [0x00, 0x00]
-  return [0x00, (0xff + value)]
+    return [0x00, 0x00 + value]
+  else:
+    return [0x00, (0x100 + value)]
 
 
 ###############################################################################
