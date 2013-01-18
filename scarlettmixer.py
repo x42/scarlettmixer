@@ -348,7 +348,7 @@ def mixer_set_gain(chn, bus, gain):
     return
   if (chn < 0 or chn > 17):
     return
-  mtx = (chn<<4) + (bus&0x07)
+  mtx = (chn<<3) + (bus&0x07)
   ctrl_send(0x0100 + mtx, 0x3c00, gain_to_hex(gain))
 
 
