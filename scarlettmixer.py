@@ -510,36 +510,38 @@ att_out_monitor(0, 0)
 att_out_phones(0, 0)
 
 
-
 ### mixer example ###
+# route in1 -> phones2(right) with gain -6dB
+# and   in2 -> phones1(left)  with gain +1dB
+if 0:
+  # disconnect defaults:
+  # if ANALG1 is already connected to chn0, it can not be connected to chn1
+  # also if chn1 already has a connection it won't be changed
+  mixer_set_source(sigsrc.OFF, 0)
+  mixer_set_source(sigsrc.OFF, 1)
 
-# disconnect defaults:
-# if ANALG1 is already connected to chn0, it can not be connected to chn1
-# also if chn1 already has a connection it won't be changed
-mixer_set_source(sigsrc.OFF, 0)
-mixer_set_source(sigsrc.OFF, 1)
+  # zero gains
+  mixer_set_gain(0, mixmat.M1, -128);
+  mixer_set_gain(0, mixmat.M2, -128);
+  mixer_set_gain(1, mixmat.M1, -128);
+  mixer_set_gain(1, mixmat.M2, -128);
 
-# zero gains
-mixer_set_gain(0, mixmat.M1, -128);
-mixer_set_gain(0, mixmat.M2, -128);
-mixer_set_gain(1, mixmat.M1, -128);
-mixer_set_gain(1, mixmat.M2, -128);
+  #instead of the above,
+  #we could simply disconnect all inputs and zero all faders..
+  zero_settings()
 
-#instead of the above,
-#we could simply disconnect all inputs and zero all faders..
-zero_settings()
+  # re-assign in2 -> matrix-ch0, in1 -> matrix-ch1
+  mixer_set_source(sigsrc.ANALG2, 0)
+  mixer_set_source(sigsrc.ANALG1, 1)
 
-# re-assign in2 -> matrix-ch0, in1 -> matrix-ch1
-mixer_set_source(sigsrc.ANALG2, 0)
-mixer_set_source(sigsrc.ANALG1, 1)
+  # matrix ch0 -> bus M1  w/ gain +1dB
+  mixer_set_gain(0, mixmat.M1, 1);
+  # matrix ch1 -> bus M2  w/ gain -6dB
+  mixer_set_gain(1, mixmat.M2, -6);
 
-# matrix ch0 -> bus M1  w/ gain +1dB
-mixer_set_gain(0, mixmat.M1, 1);
-# matrix ch1 -> bus M2  w/ gain -6dB
-mixer_set_gain(1, mixmat.M2, -6);
-
-bus_set_source(route.PHONES_LEFT,  mixbus.M1)
-bus_set_source(route.PHONES_RIGHT, mixbus.M2)
+  # route matrix-out to output
+  bus_set_source(route.PHONES_LEFT,  mixbus.M1)
+  bus_set_source(route.PHONES_RIGHT, mixbus.M2)
 
 
 #cfg_save_settings_to_hardware()
