@@ -497,10 +497,10 @@ sw_clocksource(clocksource.INTERNAL)
 # this bypasses the matrix-mixer altogether
 # just route computer's PCM 1,2 to monitor and phones.
 bus_set_source(route.MONITOR_LEFT,  mixbus.DAW1)
-bus_set_source(route.MONITOR_RIGHT, mixbus.DAW1)
+bus_set_source(route.MONITOR_RIGHT, mixbus.DAW2)
 
 bus_set_source(route.PHONES_LEFT,   mixbus.DAW1)
-bus_set_source(route.PHONES_RIGHT,  mixbus.DAW1)
+bus_set_source(route.PHONES_RIGHT,  mixbus.DAW2)
 
 bus_set_source(route.SPDIF_LEFT,  mixbus.OFF)
 bus_set_source(route.SPDIF_RIGHT, mixbus.OFF)
